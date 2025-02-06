@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'widgets/drawer_item.dart';
+import 'widgets/stat_card.dart';
+import 'widgets/game_category.dart';
+
 class DashboardPage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -105,8 +109,7 @@ class DashboardPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.dashboard,
                   text: 'Dashboard',
                   onTap: () {
@@ -118,8 +121,7 @@ class DashboardPage extends StatelessWidget {
                   future: _getCombinedTotalRecords(userId),
                   builder: (context, snapshot) {
                     int totalRecords = snapshot.data ?? 0;
-                    return _buildDrawerItem(
-                      context,
+                    return DrawerItem(
                       icon: Icons.list,
                       text: 'Liste inscrit',
                       trailing: CircleAvatar(
@@ -133,21 +135,64 @@ class DashboardPage extends StatelessWidget {
                     );
                   },
                 ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.chat,
-                  text: 'Chat',
-                  trailing: CircleAvatar(
-                    radius: 10,
-                    child: Text('+', style: TextStyle(fontSize: 12)),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushNamed('/chat');
-                  },
+
+                ExpansionTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Ventes'),
+                  children: <Widget>[
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer une vente',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/saveVente');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Liste des ventes',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+                  ],
                 ),
-                _buildDrawerItem(
-                  context,
+
+                ExpansionTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Membres'),
+                  children: <Widget>[
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer un membre',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/saveVente');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer une cotisation',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Liste des membres',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+                  ],
+                ),
+
+
+                DrawerItem(
                   icon: Icons.flag,
                   text: 'Challenges',
                   onTap: () {
@@ -159,8 +204,7 @@ class DashboardPage extends StatelessWidget {
                   leading: Icon(Icons.book),
                   title: Text('Classes'),
                   children: <Widget>[
-                    _buildDrawerItem(
-                      context,
+                    DrawerItem(
                       icon: Icons.dashboard,
                       text: 'Maths',
                       onTap: () {
@@ -168,8 +212,7 @@ class DashboardPage extends StatelessWidget {
                         Navigator.of(context).pushNamed('/classes/maths');
                       },
                     ),
-                    _buildDrawerItem(
-                      context,
+                    DrawerItem(
                       icon: Icons.dashboard,
                       text: 'English',
                       onTap: () {
@@ -177,8 +220,7 @@ class DashboardPage extends StatelessWidget {
                         Navigator.of(context).pushNamed('/classes/english');
                       },
                     ),
-                    _buildDrawerItem(
-                      context,
+                    DrawerItem(
                       icon: Icons.dashboard,
                       text: 'Economics',
                       onTap: () {
@@ -186,8 +228,7 @@ class DashboardPage extends StatelessWidget {
                         Navigator.of(context).pushNamed('/classes/economics');
                       },
                     ),
-                    _buildDrawerItem(
-                      context,
+                    DrawerItem(
                       icon: Icons.dashboard,
                       text: 'Accounts',
                       onTap: () {
@@ -197,8 +238,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.schedule,
                   text: 'Timetable',
                   onTap: () {
@@ -206,8 +246,7 @@ class DashboardPage extends StatelessWidget {
                     Navigator.of(context).pushNamed('/timetable');
                   },
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.notifications,
                   text: 'Notifications',
                   trailing: CircleAvatar(
@@ -219,8 +258,7 @@ class DashboardPage extends StatelessWidget {
                     Navigator.of(context).pushNamed('/notifications');
                   },
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.upload_file,
                   text: 'Upload new class',
                   onTap: () {
@@ -228,8 +266,7 @@ class DashboardPage extends StatelessWidget {
                     Navigator.of(context).pushNamed('/welcome');
                   },
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.logout,
                   text: 'Déconnexion',
                   onTap: () {
@@ -371,7 +408,7 @@ class DashboardPage extends StatelessWidget {
                                   );
                                 },
                               ),
-                              /*GestureDetector(
+                              GestureDetector(
                                 onTap: () => Navigator.pushNamed(context, '/time'),
                                 child: StatCard(
                                   title: 'Time',
@@ -397,11 +434,11 @@ class DashboardPage extends StatelessWidget {
                                   icon: Icons.videogame_asset,
                                   color: Colors.yellow[100]!,
                                 ),
-                              ),*/
+                              ),
 
                               SizedBox(height: 20),
 
-                              /*FutureBuilder<int>(
+                              FutureBuilder<int>(
                                 future: _getTotalRecords(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -423,7 +460,7 @@ class DashboardPage extends StatelessWidget {
                                     ),
                                   );
                                 },
-                              ),*/
+                              ),
                             ],
                           ),
                         ],
@@ -489,133 +526,7 @@ class DashboardPage extends StatelessWidget {
       },
     );
   }
-
-  Widget _buildDrawerItem(
-      BuildContext context, {
-        required IconData icon,
-        required String text,
-        required VoidCallback onTap,
-        Widget? trailing,
-      }) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(text),
-      trailing: trailing,
-      onTap: onTap,
-    );
-  }
-}
-
-class StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  const StatCard({
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: (MediaQuery.of(context).size.width / 2) - 30,
-      height: 70,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(
-                  icon,
-                  size: 24,
-                  color: color,
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black54,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GameCategory extends StatelessWidget {
-  final String title;
-  final Color color;
-  final IconData icon;
-
-  const GameCategory({
-    required this.title,
-    required this.color,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.black54),
-          SizedBox(width: 5),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black54,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 
-// page des module a  ( site web, epdci, recensement)
 
-// inscrivez vous directement dans la base de donnée du pdci pour faire aidé  ( sur le formulaire non connecter)
-// revenir sur le dashbourd apres enregistrement
-//Votre application de recensement des nouveau electeurs non inscrit sur la liste electorale
-
-// rediriger le non connecter vers la page des module

@@ -10,6 +10,7 @@ import 'registration_list_page.dart';
 import 'welcome_page.dart';
 import 'commune_page.dart';
 import 'utils/theme.dart'; // Importez votre fichier de thème personnalisé
+import 'utils/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

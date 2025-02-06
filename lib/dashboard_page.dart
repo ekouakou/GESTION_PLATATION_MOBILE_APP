@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'widgets/drawer_item.dart';
 import 'widgets/stat_card.dart';
 import 'widgets/game_category.dart';
+import 'utils/theme_provider.dart';
 
 class DashboardPage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -266,6 +270,16 @@ class DashboardPage extends StatelessWidget {
                     Navigator.of(context).pushNamed('/welcome');
                   },
                 ),
+
+                DrawerItem(
+                  icon: Icons.brightness_6,
+                  text: 'Déconnexion',
+                  onTap: () {
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .toggleTheme();
+                  },
+                ),
+
                 DrawerItem(
                   icon: Icons.logout,
                   text: 'Déconnexion',
@@ -426,7 +440,7 @@ class DashboardPage extends StatelessWidget {
                                   color: Colors.pink[100]!,
                                 ),
                               ),
-                             GestureDetector(
+                              GestureDetector(
                                 onTap: () => Navigator.pushNamed(context, '/games'),
                                 child: StatCard(
                                   title: 'Games',
