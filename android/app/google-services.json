@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "718726928056",
+    "project_id": "recensement-de-population",
+    "storage_bucket": "recensement-de-population.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718726928056:android:2e403406d45c98a497464d",
+        "android_client_info": {
+          "package_name": "ci.pdcirda.mypdcirecensement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Z0e_B8rzN1xfljvI5qtC6lBnL27iO_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718726928056:android:7c9d74f4653dc0d797464d",
+        "android_client_info": {
+          "package_name": "ci.pdcirda.recensement_population"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Z0e_B8rzN1xfljvI5qtC6lBnL27iO_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

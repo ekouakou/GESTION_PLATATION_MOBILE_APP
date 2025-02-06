@@ -1,0 +1,1321 @@
+// lib/form_page.dart
+// lib/form_page.dart
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class FormPage extends StatefulWidget {
+  @override
+  _FormPageState createState() => _FormPageState();
+}
+
+class _FormPageState extends State<FormPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Controllers for the form fields
+  final TextEditingController districtController = TextEditingController();
+  final TextEditingController regionController = TextEditingController();
+  final TextEditingController departmentController = TextEditingController();
+  final TextEditingController subPrefectureController = TextEditingController();
+  final TextEditingController communeController = TextEditingController();
+  final TextEditingController villageController = TextEditingController();
+  final TextEditingController campementController = TextEditingController();
+
+  // New controllers
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController birthPlaceController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
+  final TextEditingController phone1Controller = TextEditingController();
+  final TextEditingController phone2Controller = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController professionController = TextEditingController();
+  final TextEditingController occupationController = TextEditingController();
+  final TextEditingController workplaceController = TextEditingController();
+  final TextEditingController fatherNameController = TextEditingController();
+  final TextEditingController motherNameController = TextEditingController();
+  final TextEditingController residenceController = TextEditingController();
+  final TextEditingController emergencyContactController = TextEditingController();
+  final TextEditingController emergencyPhone1Controller = TextEditingController();
+  final TextEditingController emergencyPhone2Controller = TextEditingController();
+
+  final TextEditingController reasonController = TextEditingController();
+  final TextEditingController documentSupletifController = TextEditingController();
+  final TextEditingController passportController = TextEditingController();
+  final TextEditingController cniController = TextEditingController();
+
+  final TextEditingController participeScrutinController = TextEditingController();
+  final TextEditingController inAssociationController = TextEditingController();
+  final TextEditingController notInterestedReasonController = TextEditingController();
+  final TextEditingController otherReasonsController = TextEditingController();
+
+  final TextEditingController lieuDeVoteController = TextEditingController();
+  final TextEditingController bureauDeVoteController = TextEditingController();
+  
+  String? selectedGenre;
+  int? selectedReason;
+  int? selectedDocument;
+  int? selectedDocumentSupletif;
+  int? selectedPassport;
+  int? selectedCni;
+  int? selectedParticipeScrutin;
+  int? selectedInAssociation;
+  int? selectedPartiPolitique;
+  int? selectedEsTuMembre;
+  int? selectedDevenirMembre;
+
+  // Controllers for new section
+  final TextEditingController quartierController = TextEditingController();
+  final TextEditingController villageCommitteeController = TextEditingController();
+
+  String? selectedDelegationDepartmentale;
+  String? selectedDelegationCommunale;
+  String? selectedSection;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Formulaire d\'inscription'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            //Navigator.pop(context);
+            // Check if the user is signed in
+            User? user = FirebaseAuth.instance.currentUser;
+
+            if (user != null) {
+              print("je suis connecté");
+              // User is signed in, navigate to a different page
+              //Navigator.pop(context);
+              Navigator.of(context).pushReplacementNamed('/dashboard');
+              /*Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => YourRedirectPage()),
+              );*/
+            } else {
+              // User is not signed in, just pop the page
+              print("je ne suis pas connecté");
+              Navigator.of(context).pushReplacementNamed('/choixinscription');
+
+            }
+          },
+        ),
+        backgroundColor: Color(0xFF007D3C),
+
+      ),
+
+      backgroundColor: Colors.white,
+      body : Stack(
+        children: [
+          Container(
+            height: 50,
+            color: const Color(0xFF007D3C),
+          ),
+
+          SingleChildScrollView(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomCard(
+              title: 'Localité de recensement',
+              iconWidget: Image.asset(
+                'assets/images/carte-ci.png',
+                height: 24.0,
+                width: 24.0,
+              ),
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+            ),
+            const SizedBox(height: 20),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdownFormField(
+                          labelText: 'District',
+                          items: ['District 1', 'District 2', 'District 3'],
+                          onChanged: (value) {
+                            districtController.text = value ?? '';
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomDropdownFormField(
+                          labelText: 'Région',
+                          items: ['Région 1', 'Région 2', 'Région 3'],
+                          onChanged: (value) {
+                            regionController.text = value ?? '';
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdownFormField(
+                          labelText: 'Département',
+                          items: ['Département 1', 'Département 2', 'Département 3'],
+                          onChanged: (value) {
+                            departmentController.text = value ?? '';
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomDropdownFormField(
+                          labelText: 'Sous-préfecture',
+                          items: ['Sous-préfecture 1', 'Sous-préfecture 2', 'Sous-préfecture 3'],
+                          onChanged: (value) {
+                            subPrefectureController.text = value ?? '';
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdownFormField(
+                          labelText: 'Commune',
+                          items: ['Commune 1', 'Commune 2', 'Commune 3'],
+                          onChanged: (value) {
+                            communeController.text = value ?? '';
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomTextField(
+                          labelText: 'Village',
+                          controller: villageController,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          labelText: 'Campement',
+                          controller: campementController,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  CustomCard(
+                    title: 'Informations personnelles',
+                    iconWidget: Image.asset(
+                      'assets/images/user.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+                    child: Card(
+                      elevation: 4,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile(
+                                    title: const Text('Masculin'),
+                                    value: 'Masculin',
+                                    groupValue: selectedGenre,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedGenre = value as String?;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile(
+                                    title: const Text('Féminin'),
+                                    value: 'Féminin',
+                                    groupValue: selectedGenre,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedGenre = value as String?;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            CustomTextField(
+                              labelText: 'Votre nom',
+                              controller: nameController,
+                            ),
+                            const SizedBox(height: 10),
+                            CustomTextField(
+                              labelText: 'Votre prénom',
+                              controller: firstNameController,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Lieu de naissance',
+                                    controller: birthPlaceController,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Date de naissance',
+                                    controller: birthDateController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Téléphonie 1',
+                                    controller: phone1Controller,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Téléphonie 2',
+                                    controller: phone2Controller,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            CustomTextField(
+                              labelText: 'E-mail',
+                              controller: emailController,
+                            ),
+                            const SizedBox(height: 10),
+                            CustomTextField(
+                              labelText: 'Profession',
+                              controller: professionController,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Fonction/occupation',
+                                    controller: occupationController,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Lieu de travail',
+                                    controller: workplaceController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Nom du père',
+                                    controller: fatherNameController,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Nom de la mère',
+                                    controller: motherNameController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Lieu de résidence habituelle',
+                                    controller: residenceController,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Personne à contacter en cas d’urgence',
+                                    controller: emergencyContactController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Contact téléphonique 1',
+                                    controller: emergencyPhone1Controller,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Contact téléphonique 2',
+                                    controller: emergencyPhone2Controller,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  CustomCard(
+                    title: 'Le vote',
+                    iconWidget: Image.asset(
+                      'assets/images/document.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                  ),
+
+
+                  Container(
+                    width: double.infinity, // This makes the card take the full width of the screen
+                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0), // Remove horizontal margin
+                    child: Card(
+                      elevation: 4,
+                      color: Colors.white,  // Changer la couleur de fond
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),  // Personnaliser l'arrondi des angles
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.2), // Diminish the shadow opacity here
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Lieu de vote',
+                                    controller: lieuDeVoteController,
+                                    //controller: TextEditingController(),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Bureau de vote',
+                                    controller: bureauDeVoteController,
+                                    //controller: TextEditingController(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+                  CustomCard(
+                    title: 'Documentations et inscription sur la liste electorale',
+                    iconWidget: Image.asset(
+                      'assets/images/document.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                    backgroundColor: Color(0xFF186747),
+                    textColor: Colors.white,
+                  ),
+
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+                    child: Card(
+                      elevation: 4,
+                      color: const Color(0xFFb4d3c7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildQuestion(
+                              questionNumber: 1,
+                              mycolor: const Color(0xFFCC9B21),
+                              questionText: 'Etes-vous déjà inscrit sur la liste électorale ?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedReason,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedReason = value;
+                                });
+                              },
+                              showTextField: selectedReason == 1,
+                              controller: reasonController,
+                              labelText: 'Donner les raisons',
+                            ),
+                            const SizedBox(height: 10),
+                            buildQuestion(
+                              questionNumber: 2,
+                              mycolor: const Color(0xFFCC9B21),
+                              questionText: 'Avez-vous les documents requis ?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedDocument,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedDocument = value;
+                                });
+                              },
+                            ),
+                            if (selectedDocument == 0) ...[
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  'Si vous n\'avez pas les documents requis, de quel(s) document(s) administratif(s) disposez-vous ?',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              buildQuestion(
+                                questionNumber: 1,
+                                mycolor: const Color(0xFFCC9B21),
+                                questionText: 'Un acte de naissance ou jugement Supplétif ?',
+                                options: ['Oui', 'Non'],
+                                selectedOption: selectedDocumentSupletif,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedDocumentSupletif = value;
+                                  });
+                                },
+                                showTextField: selectedDocumentSupletif == 0,
+                                controller: documentSupletifController,
+                                labelText: 'Renseigner le numéro',
+                              ),
+                              const SizedBox(height: 10),
+                              buildQuestion(
+                                questionNumber: 1,
+                                mycolor: const Color(0xFFCC9B21),
+                                questionText: 'Un Passeport ?',
+                                options: ['Oui', 'Non'],
+                                selectedOption: selectedPassport,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedPassport = value;
+                                  });
+                                },
+                                showTextField: selectedPassport == 0,
+                                controller: passportController,
+                                labelText: 'Renseigner le numéro',
+                              ),
+                              const SizedBox(height: 10),
+                              buildQuestion(
+                                questionNumber: 1,
+                                mycolor: const Color(0xFFCC9B21),
+                                questionText: 'Une CNI ou d\'un Récépissé de CNI ?',
+                                options: ['Oui', 'Non'],
+                                selectedOption: selectedCni,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedCni = value;
+                                  });
+                                },
+                                showTextField: selectedCni == 0,
+                                controller: cniController,
+                                labelText: 'Renseigner le numéro',
+                              ),
+                            ],
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+                  CustomCard(
+                    title: 'Activites sociales et politiques',
+                    iconWidget: Image.asset(
+                      'assets/images/activite-sociale.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                    backgroundColor: Color(0xFFCC9B21),
+                    textColor: Colors.white,
+                  ),
+
+
+
+                  // Second additional form section
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+                    child: Card(
+                      elevation: 4,
+                      color: const Color(0xFFf3e8cc),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildQuestion(
+                              questionNumber: 1,
+                              mycolor : const Color(0xFF186747),
+                              questionText: 'Avez-vous déjà participé à un scrutin?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedParticipeScrutin,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedParticipeScrutin = value;
+                                });
+                              },
+                              showTextField: selectedParticipeScrutin == 0,
+                              controller: participeScrutinController,
+                              labelText: 'Renseigner la localité',
+                            ),
+                            const SizedBox(height: 10),
+                            buildQuestion(
+                              questionNumber: 2,
+                              mycolor : const Color(0xFF186747),
+                              questionText: 'Etes-vous dans une asociation ?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedInAssociation,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedInAssociation = value;
+                                });
+                              },
+                              showTextField: selectedInAssociation == 0,
+                              controller: inAssociationController,
+                              labelText: 'Préciser le mom',
+                            ),
+                            const SizedBox(height: 10),
+                            buildQuestion(
+                              questionNumber: 3,
+                              mycolor : const Color(0xFF186747),
+                              questionText: 'Participez-vous à des activités politiques?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedPartiPolitique,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedPartiPolitique = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            buildQuestion(
+                              questionNumber: 6,
+                              mycolor : const Color(0xFF186747),
+                              questionText: 'Etes-vous un membre d’un parti politique?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedEsTuMembre,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedEsTuMembre = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            buildQuestion(
+                              questionNumber: 2,
+                              mycolor : const Color(0xFF186747),
+                              questionText: 'Souhaitez-vous devenir membre du PDCI RDA?',
+                              options: ['Oui', 'Non'],
+                              selectedOption: selectedDevenirMembre,
+                              onChanged: (int? value) {
+                                setState(() {
+                                  selectedDevenirMembre = value;
+                                });
+                              },
+                            ),
+                            if (selectedDevenirMembre == 0) ...[
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomTextField(
+                                      labelText: 'Si NON,pourquoi?',
+                                      controller: notInterestedReasonController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomTextField(
+                                      labelText: 'Autres raisons, préciser',
+                                      controller: otherReasonsController,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  CustomCard(
+                    title: 'Ratachement souhaité du requerant à une structure du parti',
+                    iconWidget: Image.asset(
+                      'assets/images/rattachement.png',
+                      height: 24.0,
+                      width: 24.0,
+                    ),
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                  ),
+
+                  // Third additional form section
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+                    child: Card(
+                      elevation: 4,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.2),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomDropdownFormField(
+                                    labelText: 'Délégation départementale',
+                                    items: ['Délégation 1', 'Délégation 2', 'Délégation 3'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedDelegationDepartmentale = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomDropdownFormField(
+                                    labelText: 'Délégation communale',
+                                    items: ['DC 1', 'DC 2', 'DC 3'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedDelegationCommunale = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomDropdownFormField(
+                                    labelText: 'Section',
+                                    items: ['Section 1', 'Section 2', 'Section 3'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedSection = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Comité de quartier',
+                                    controller: quartierController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    labelText: 'Comité de vilage',
+                                    controller: villageCommitteeController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          await saveFormData();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF186747),
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text('Enregistrer'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> saveFormData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userId = user.uid;
+        final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+
+        final existingPhonesQuery = await FirebaseFirestore.instance
+            .collection('form_data')
+            .where('form_data.phone1', isEqualTo: phone1Controller.text)
+            .where('form_data.phone2', isEqualTo: phone2Controller.text)
+            .get();
+
+        if (existingPhonesQuery.docs.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Erreur'),
+                content: const Text('Les numéros de téléphone sont déjà utilisés.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          await userDoc.collection('form_data').add({
+            'district': districtController.text,
+            'region': regionController.text,
+            'department': departmentController.text,
+            'sub_prefecture': subPrefectureController.text,
+            'commune': communeController.text,
+            'village': villageController.text,
+            'campement': campementController.text,
+            'genre': selectedGenre,
+            'name': nameController.text,
+            'first_name': firstNameController.text,
+            'birth_place': birthPlaceController.text,
+            'birth_date': birthDateController.text,
+            'phone1': phone1Controller.text,
+            'phone2': phone2Controller.text,
+            'email': emailController.text,
+            'profession': professionController.text,
+            'occupation': occupationController.text,
+            'workplace': workplaceController.text,
+            'father_name': fatherNameController.text,
+            'mother_name': motherNameController.text,
+            'residence': residenceController.text,
+            'emergency_contact': emergencyContactController.text,
+            'emergency_phone1': emergencyPhone1Controller.text,
+            'emergency_phone2': emergencyPhone2Controller.text,
+            'selected_reason': selectedReason,
+            'reason': reasonController.text,
+            'selected_document': selectedDocument,
+            'selected_document_supletif': selectedDocumentSupletif,
+            'document_supletif_number': documentSupletifController.text,
+            'selected_passport': selectedPassport,
+            'passport_number': passportController.text,
+            'selected_cni': selectedCni,
+            'cni_number': cniController.text,
+
+            // Additional fields
+            'isRegistered': selectedReason == 1 ? 'Yes' : 'No',
+            'hasRequiredDocuments': selectedDocument == 0 ? 'Yes' : 'No',
+            'hasParticipated': selectedParticipeScrutin == 0 ? 'Yes' : 'No',
+            'scrutinLocation': participeScrutinController.text,
+            'isInAssociation': selectedInAssociation == 0 ? 'Yes' : 'No',
+            'associationName': inAssociationController.text,
+            'participatesInPolitics': selectedPartiPolitique == 0 ? 'Yes' : 'No',
+            'isPartyMember': selectedEsTuMembre == 0 ? 'Yes' : 'No',
+            'wantsToJoinPdci': selectedDevenirMembre == 0 ? 'Yes' : 'No',
+            'notInterestedReason': notInterestedReasonController.text,
+            'otherReasons': otherReasonsController.text,
+
+            // Fields from the new section
+            'delegationDepartmentale': selectedDelegationDepartmentale,
+            'delegationCommunale': selectedDelegationCommunale,
+            'section': selectedSection,
+            'quartier': quartierController.text,
+            'villageCommittee': villageCommitteeController.text,
+            'lieuDeVote': lieuDeVoteController.text,
+            'bureauDeVote': bureauDeVoteController.text,
+
+          });
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Succès'),
+                content: const Text('Les données ont été enregistrées avec succès.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    } catch (e) {
+      print('Error saving form data: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Erreur'),
+            content: const Text('Échec de l\'enregistrement des données.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+  Widget buildQuestion({
+    required int questionNumber,
+    required String questionText,
+    required List<String> options,
+    required int? selectedOption,
+    required ValueChanged<int?> onChanged,
+    bool showTextField = false,
+    TextEditingController? controller,
+    String? labelText,
+    required Color mycolor,
+  }) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                decoration: BoxDecoration(
+                  color: mycolor,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text(
+                  '$questionNumber',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  questionText,
+                  style: const TextStyle(
+                    //fontWeight: FontWeight.bold,
+                    fontSize: 13.0, // Ajustez la taille du texte ici
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: options.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    String option = entry.value;
+                    return GestureDetector(
+                      onTap: () {
+                        onChanged(index);
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min, // Pour rapprocher les éléments
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(0.0), // Ajuste la marge autour du bouton radio
+                            child: Theme(
+                              data: Theme.of(context).copyWith(
+                                visualDensity: VisualDensity.compact, // Ajuste la densité visuelle pour les widgets
+                                unselectedWidgetColor: mycolor, // Couleur du bouton radio non sélectionné
+                                radioTheme: const RadioThemeData(),
+                              ),
+                              child: Transform.scale(
+                                scale: 0.6, // Ajustez cette valeur pour changer la taille du bouton radio
+                                child: Radio<int>(
+                                  value: index,
+                                  groupValue: selectedOption,
+                                  onChanged: onChanged,
+                                  activeColor: mycolor, // Couleur du bouton radio sélectionné
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width:0.0), // Ajustez la marge à gauche du texte du bouton radio
+                          Text(
+                            option,
+                            style: TextStyle(
+                              fontSize: 14.0, // Ajustez la taille du texte ici
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (showTextField) ...[
+            const SizedBox(height: 10),
+            CustomTextField(
+              labelText: labelText ?? '',
+              controller: controller ?? TextEditingController(),
+            ),
+          ],
+        ],
+      ),
+    );
+
+  }
+
+
+  Widget buildDocumentQuestion({
+    required int questionNumber,
+    required String questionText,
+    required TextEditingController controller,
+    required String labelText,
+    required Color mycolor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: mycolor,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                '$questionNumber',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                questionText,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+          ],
+        ),
+        const SizedBox(height: 10),
+        CustomTextField(
+          labelText: labelText,
+          controller: controller,
+        ),
+      ],
+    );
+  }
+
+}
+
+
+class CustomCard extends StatelessWidget {
+  final String title;
+  final Widget iconWidget; // Remplace IconData par Widget
+  final Color backgroundColor;
+  final Color textColor;
+
+  const CustomCard({
+    Key? key,
+    required this.title,
+    required this.iconWidget,
+    this.backgroundColor = Colors.white,
+    this.textColor = Colors.black, // Ajouter un paramètre pour la couleur du texte
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+      child: Card(
+        elevation: 4,
+        color: backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        shadowColor: Colors.black.withOpacity(0.2),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              iconWidget, // Utilise le widget pour l'icône ou l'image
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: textColor, // Utilise la couleur du texte paramétrée
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String labelText;
+  final TextEditingController controller;
+  final FormFieldValidator<String>? validator;
+  final bool obscureText;
+  final TextInputType keyboardType;
+  final Color? fillColor;
+  final EdgeInsetsGeometry contentPadding; // Ajout du paramètre contentPadding
+  final TextStyle? labelStyle; // Ajout du paramètre labelStyle
+
+  const CustomTextField({
+    Key? key,
+    required this.labelText,
+    required this.controller,
+    this.validator,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+    this.fillColor = Colors.white, // Valeur par défaut pour fillColor
+    this.contentPadding = const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0), // Valeur par défaut pour contentPadding
+    this.labelStyle, // Initialisation du paramètre labelStyle
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(fontSize: 12.0),//labelStyle, // Application du style personnalisé pour le label
+        filled: true,
+        fillColor: fillColor,
+        contentPadding: contentPadding,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDropdownFormField extends StatefulWidget {
+  final String labelText;
+  final List<String> items;
+  final String? value;
+  final ValueChanged<String?>? onChanged;
+  final EdgeInsetsGeometry contentPadding;
+  final TextStyle? labelStyle;
+
+  const CustomDropdownFormField({
+    Key? key,
+    required this.labelText,
+    required this.items,
+    this.value,
+    this.onChanged,
+    this.contentPadding = const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+    this.labelStyle,
+  }) : super(key: key);
+
+  @override
+  _CustomDropdownFormFieldState createState() => _CustomDropdownFormFieldState();
+}
+
+class _CustomDropdownFormFieldState extends State<CustomDropdownFormField> {
+  String? _selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItem = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.black.withOpacity(0.9), // Couleur et opacité de l'ombre
+          ),
+        ),
+        DropdownButtonFormField<String>(
+          value: _selectedItem,
+          onChanged: (newValue) {
+            setState(() {
+              _selectedItem = newValue;
+            });
+            widget.onChanged?.call(newValue);
+          },
+          dropdownColor: Colors.white,
+          elevation: 15, // Ajuste la hauteur de l'ombre
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            labelStyle: TextStyle(fontSize: 12.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.green, width: 2.0),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.red, width: 2.0),
+            ),
+          ),
+          items: widget.items.map((String item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(
+                item,
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
