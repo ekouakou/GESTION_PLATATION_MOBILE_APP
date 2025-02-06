@@ -18,18 +18,18 @@ import '/widgets/custom_card.dart';
 import '/widgets/document_question.dart';
 
 
-class FormPage extends StatefulWidget {
+class SaveVenteForm extends StatefulWidget {
 
   final String? itemId; // ID de l'item à modifier, null si création
 
-  FormPage({this.itemId});
+  SaveVenteForm({this.itemId});
 
   @override
   _FormPageState createState() => _FormPageState();
 
 }
 
-class _FormPageState extends State<FormPage> {
+class _FormPageState extends State<SaveVenteForm> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for the form fields

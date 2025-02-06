@@ -1,6 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+import 'widgets/drawer_item.dart';
+import 'widgets/stat_card.dart';
+import 'widgets/game_category.dart';
 
 class DashboardPage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,6 +44,7 @@ class DashboardPage extends StatelessWidget {
     return totalRecords + userTotalRecords;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User?>(
@@ -52,17 +59,19 @@ class DashboardPage extends StatelessWidget {
         }
         User user = snapshot.data!;
         String userId = user.uid;
+        String district = "SomeDistrict"; // Remplacez "SomeDistrict" par la valeur souhaitée ou par une variable dynamique
+
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Dashboard'),
+            //title: Text('Dashboard'),
           ),
           drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
                 DrawerHeader(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Color(0xFF007D3C), Color(0xFF005F2E)],
                       begin: Alignment.topCenter,
@@ -71,7 +80,7 @@ class DashboardPage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 30,
                         backgroundImage: AssetImage('assets/images/logo-e-pdci.png'),
                         backgroundColor: Color(0xFFF1F6F9),
@@ -81,8 +90,8 @@ class DashboardPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'e.PDCI-Mobile',
+                          Text(
+                            'e-Pdci Rda',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -90,7 +99,7 @@ class DashboardPage extends StatelessWidget {
                           ),
                           Text(
                             user.email ?? 'Email non disponible',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                             ),
@@ -100,8 +109,7 @@ class DashboardPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
                   icon: Icons.dashboard,
                   text: 'Dashboard',
                   onTap: () {
@@ -109,35 +117,13 @@ class DashboardPage extends StatelessWidget {
                     Navigator.of(context).pushReplacementNamed('/dashboard');
                   },
                 ),
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.add,
-                  text: 'Nouvel électeur',
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed('/form');
-                  },
-                ),
-
-
-                _buildDrawerItem(
-                  context,
-                  icon: Icons.dashboard,
-                  text: 'Guide utilisateur',
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed('/guide_utilisateur');
-                  },
-                ),
-
                 FutureBuilder<int>(
                   future: _getCombinedTotalRecords(userId),
                   builder: (context, snapshot) {
                     int totalRecords = snapshot.data ?? 0;
-                    return _buildDrawerItem(
-                      context,
+                    return DrawerItem(
                       icon: Icons.list,
-                      text: 'Liste des inscrits',
+                      text: 'Liste inscrit',
                       trailing: CircleAvatar(
                         radius: 10,
                         child: Text('$totalRecords', style: TextStyle(fontSize: 12)),
@@ -149,8 +135,93 @@ class DashboardPage extends StatelessWidget {
                     );
                   },
                 ),
-                _buildDrawerItem(
-                  context,
+                DrawerItem(
+                  icon: Icons.chat,
+                  text: 'Chat',
+                  trailing: CircleAvatar(
+                    radius: 10,
+                    child: Text('+', style: TextStyle(fontSize: 12)),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/chat');
+                  },
+                ),
+                DrawerItem(
+                  icon: Icons.flag,
+                  text: 'Challenges',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/challenges');
+                  },
+                ),
+                ExpansionTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Classes'),
+                  children: <Widget>[
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Maths',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/classes/maths');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'English',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/classes/english');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Economics',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/classes/economics');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Accounts',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/classes/accounts');
+                      },
+                    ),
+                  ],
+                ),
+                DrawerItem(
+                  icon: Icons.schedule,
+                  text: 'Timetable',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/timetable');
+                  },
+                ),
+                DrawerItem(
+                  icon: Icons.notifications,
+                  text: 'Notifications',
+                  trailing: CircleAvatar(
+                    radius: 10,
+                    child: Text('8', style: TextStyle(fontSize: 12)),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/notifications');
+                  },
+                ),
+                DrawerItem(
+                  icon: Icons.upload_file,
+                  text: 'Upload new class',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/welcome');
+                  },
+                ),
+                DrawerItem(
                   icon: Icons.logout,
                   text: 'Déconnexion',
                   onTap: () {
@@ -168,7 +239,7 @@ class DashboardPage extends StatelessWidget {
                   children: [
                     Container(
                       height: 250,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/background.jpg'),
                           fit: BoxFit.cover,
@@ -176,74 +247,176 @@ class DashboardPage extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: GridView(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.5,
-                        ),
+                      padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                      child: Column(
                         children: [
-                          FutureBuilder<int>(
-                            future: _getCombinedTotalRecords(userId),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState != ConnectionState.done) {
-                                return SizedBox(); // Return an empty widget
-                              }
-                              if (snapshot.hasError) {
-                                return Text('Erreur: ${snapshot.error}');
-                              }
-                              int combinedTotalRecords = snapshot.data ?? 0;
-                              return GestureDetector(
-                                onTap: () {
-                                  // Action à effectuer lorsque l'utilisateur tape sur le GestureDetector
-                                },
-                                child: StatCard2(
-                                  title: 'Total des inscriptions',
-                                  count: combinedTotalRecords,
-                                  percentage: 15,
-                                  change: 0.5,
-                                  gradient: LinearGradient(
-                                    colors: [Color(0xFF007D3C), Color(0xFF005F2E)],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  textColor: Colors.white,
-                                ),
-                              );
-                            },
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage('assets/images/logo-e-pdci.png'),
                           ),
-                          FutureBuilder<int>(
-                            future: _getUserTotalRecords(userId),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState != ConnectionState.done) {
-                                return SizedBox(); // Return an empty widget
-                              }
-                              if (snapshot.hasError) {
-                                return Text('Erreur: ${snapshot.error}');
-                              }
-                              int userTotalRecords = snapshot.data ?? 0;
-                              return GestureDetector(
-                                onTap: () {
-                                  // Action à effectuer lorsque l'utilisateur tape sur le GestureDetector
-                                },
-                                child: StatCard2(
-                                  title: 'Mes inscrits',
-                                  count: userTotalRecords,
-                                  percentage: 15,
-                                  change: 0.5,
-                                  gradient: LinearGradient(
-                                    colors: [Color(0xFFCC9B21), Color(0xFFCC9B21)],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                          SizedBox(height: 10),
+                          Text(
+                            'E-PDCI',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Le portail Digital',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+
+                          ),
+                          Text(
+                            'du PDCI-RDA ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+
+                          ),
+                          SizedBox(height: 20),
+                          Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(Icons.monetization_on, color: Colors.blue, size: 24),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        '1.500',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  textColor: Colors.white,
+                                  Text(
+                                    'How to earn coins?',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Wrap(
+                            spacing: 20,
+                            runSpacing: 20,
+                            children: [
+                              FutureBuilder<int>(
+                                future: _getCombinedTotalRecords(userId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Erreur: ${snapshot.error}');
+                                  }
+                                  int combinedTotalRecords = snapshot.data ?? 0;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // Action à effectuer lorsque l'utilisateur tape sur le GestureDetector
+                                    },
+                                    child: StatCard(
+                                      title: 'Total inscrit',
+                                      value: '$combinedTotalRecords',
+                                      icon: Icons.add_chart,
+                                      color: Colors.purple[100]!,
+                                    ),
+                                  );
+                                },
+                              ),
+                              FutureBuilder<int>(
+                                future: _getUserTotalRecords(userId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Erreur: ${snapshot.error}');
+                                  }
+                                  int userTotalRecords = snapshot.data ?? 0;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // Action à effectuer lorsque l'utilisateur tape sur le GestureDetector
+                                    },
+                                    child: StatCard(
+                                      title: 'Mes inscrits',
+                                      value: '$userTotalRecords',
+                                      icon: Icons.person,
+                                      color: Colors.green[100]!,
+                                    ),
+                                  );
+                                },
+                              ),
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(context, '/time'),
+                                child: StatCard(
+                                  title: 'Time',
+                                  value: '1h 23m',
+                                  icon: Icons.access_time,
+                                  color: Colors.blue[100]!,
                                 ),
-                              );
-                            },
+                              ),
+                              GestureDetector(
+                                onTap: () => Navigator.pushNamed(context, '/skills'),
+                                child: StatCard(
+                                  title: 'Skills',
+                                  value: '1.500',
+                                  icon: Icons.military_tech,
+                                  color: Colors.pink[100]!,
+                                ),
+                              ),
+                             GestureDetector(
+                                onTap: () => Navigator.pushNamed(context, '/games'),
+                                child: StatCard(
+                                  title: 'Games',
+                                  value: '28',
+                                  icon: Icons.videogame_asset,
+                                  color: Colors.yellow[100]!,
+                                ),
+                              ),
+
+                              SizedBox(height: 20),
+
+                              FutureBuilder<int>(
+                                future: _getTotalRecords(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Erreur: ${snapshot.error}');
+                                  }
+                                  int totalRecords = snapshot.data ?? 0;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // Action à effectuer lorsque l'utilisateur tape sur le GestureDetector
+                                    },
+                                    child: StatCard(
+                                      title: 'Total Records',
+                                      value: '$totalRecords',
+                                      icon: Icons.insert_chart,
+                                      color: Colors.blue[100]!,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -251,95 +424,64 @@ class DashboardPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Recommended games',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GameCategory(
+                            title: 'Survival',
+                            color: Colors.red[100]!,
+                            icon: FontAwesomeIcons.star,
+                          ),
+                          GameCategory(
+                            title: 'Action',
+                            color: Colors.orange[100]!,
+                            icon: FontAwesomeIcons.chartPie,
+                          ),
+                          GameCategory(
+                            title: 'Collector',
+                            color: Colors.blue[100]!,
+                            icon: FontAwesomeIcons.medal,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'More popular above',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton.extended(
+          floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).pushNamed('/form');
             },
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icon(Icons.add),
-            label: Text("Nouvel électeur"),
+            child: Icon(Icons.add),
           ),
         );
       },
     );
   }
-
-  Widget _buildDrawerItem(
-      BuildContext context, {
-        required IconData icon,
-        required String text,
-        VoidCallback? onTap,
-        Widget? trailing,
-      }) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(text),
-      trailing: trailing,
-      onTap: onTap,
-    );
-  }
 }
 
 
-class StatCard2 extends StatelessWidget {
-  final String title;
-  final int count;
-  final double percentage;
-  final double change;
-  final Gradient gradient;
-  final Color textColor;
 
-  StatCard2({
-    required this.title,
-    required this.count,
-    required this.percentage,
-    required this.change,
-    required this.gradient,
-    required this.textColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 16,
-                ),
-              ),
-              Spacer(),
-              Text(
-                '$count',
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

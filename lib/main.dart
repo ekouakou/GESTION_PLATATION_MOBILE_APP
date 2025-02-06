@@ -5,6 +5,7 @@ import 'choix_inscrption.dart';
 import 'login_page.dart';
 import 'dashboard_page.dart';
 import 'form_page.dart';
+import 'save_vente_forme.dart';
 import 'registration_list_page.dart';
 import 'welcome_page.dart';
 import 'commune_page.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/dashboard': (context) => DashboardPage(),
         '/form': (context) => FormPage(),
+        '/saveVente': (context) => SaveVenteForm(),
         '/liste': (context) => RegistrationList(),
         '/choixinscription': (context) => ChoixInscriptionPage(),
       },
