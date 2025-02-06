@@ -135,18 +135,63 @@ class DashboardPage extends StatelessWidget {
                     );
                   },
                 ),
-                DrawerItem(
-                  icon: Icons.chat,
-                  text: 'Chat',
-                  trailing: CircleAvatar(
-                    radius: 10,
-                    child: Text('+', style: TextStyle(fontSize: 12)),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushNamed('/chat');
-                  },
+
+                ExpansionTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Ventes'),
+                  children: <Widget>[
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer une vente',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/saveVente');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Liste des ventes',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+                  ],
                 ),
+
+                ExpansionTile(
+                  leading: Icon(Icons.book),
+                  title: Text('Membres'),
+                  children: <Widget>[
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer un membre',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/saveVente');
+                      },
+                    ),
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Enregistrer une cotisation',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+
+                    DrawerItem(
+                      icon: Icons.dashboard,
+                      text: 'Liste des membres',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/listevente');
+                      },
+                    ),
+                  ],
+                ),
+
+
                 DrawerItem(
                   icon: Icons.flag,
                   text: 'Challenges',
