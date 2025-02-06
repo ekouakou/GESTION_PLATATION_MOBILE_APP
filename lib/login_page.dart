@@ -225,12 +225,12 @@ class _LoginPageState extends State<LoginPage> {
       ),
       appBar: AppBar(
         backgroundColor: Color(0xFF007D3C),
-        leading: IconButton(
+        /*leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pushReplacementNamed('/welcome');
           },
-        ),
+        ),*/
         title: Text(
           'Connexion',
           style: TextStyle(color: Colors.white),

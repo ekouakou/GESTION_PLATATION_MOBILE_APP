@@ -8,15 +8,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'choix_inscrption.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '/widgets/custom_text_field.dart';
-import '/widgets/custom_date_picker.dart';
-import '/widgets/custom_phone_number_field.dart';
-import '/widgets/custom_dropdown.dart';
-import '/widgets/custom_dropdown_button_form_field.dart';
-import '/widgets/genre_question.dart';
-import '/widgets/custom_card.dart';
-import '/widgets/document_question.dart';
-
 
 class FormPage extends StatefulWidget {
 
@@ -991,5 +982,606 @@ class _FormPageState extends State<FormPage> {
       },
     );
   }
+
+
+  Widget buildDocumentQuestion({
+    required int questionNumber,
+    required String questionText,
+    required TextEditingController controller,
+    required String labelText,
+    required Color mycolor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: mycolor,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text(
+                '$questionNumber',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                questionText,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+          ],
+        ),
+        const SizedBox(height: 10),
+        CustomTextField(
+          labelText: labelText,
+          controller: controller,
+        ),
+      ],
+    );
+  }
+
+}
+
+
+class CustomCard extends StatelessWidget {
+  final String title;
+  final Widget iconWidget; // Remplace IconData par Widget
+  final Color backgroundColor;
+  final Color textColor;
+
+  const CustomCard({
+    Key? key,
+    required this.title,
+    required this.iconWidget,
+    this.backgroundColor = Colors.white,
+    this.textColor = Colors.black, // Ajouter un paramètre pour la couleur du texte
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+      child: Card(
+        elevation: 4,
+        color: backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        shadowColor: Colors.black.withOpacity(0.2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 12.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              iconWidget, // Utilise le widget pour l'icône ou l'image
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: textColor, // Utilise la couleur du texte paramétrée
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final String labelText;
+  final TextEditingController controller;
+  final FormFieldValidator<String>? validator;
+  final bool obscureText;
+  final TextInputType keyboardType;
+  final Color? fillColor;
+  final EdgeInsetsGeometry contentPadding;
+  final TextStyle? labelStyle;
+  final bool requiredIndicator;
+
+  const CustomTextField({
+    Key? key,
+    required this.labelText,
+    required this.controller,
+    this.validator,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+    this.fillColor = Colors.white,
+    this.contentPadding = const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+    this.labelStyle,
+    this.requiredIndicator = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: null, // Nous n'utilisons plus labelText directement
+        label: RichText(
+          text: TextSpan(
+            text: labelText,
+            style: labelStyle ?? TextStyle(fontSize: 12.0, color: Colors.black),
+            children: requiredIndicator
+                ? [
+              TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.black, fontSize: 14.0),
+              ),
+            ]
+                : [],
+          ),
+        ),
+        filled: true,
+        fillColor: fillColor,
+        contentPadding: contentPadding,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDropdownFormField extends StatefulWidget {
+  final String labelText;
+  final List<String> items;
+  final String? value;
+  final ValueChanged<String?>? onChanged;
+  final FormFieldValidator<String>? validator;
+  final EdgeInsetsGeometry contentPadding;
+  final TextStyle? labelStyle;
+  final bool isRequired;
+  final Color? backgroundColor;
+
+  const CustomDropdownFormField({
+    Key? key,
+    required this.labelText,
+    required this.items,
+    this.value,
+    this.onChanged,
+    this.validator,
+    this.contentPadding = const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+    this.labelStyle,
+    this.isRequired = false,
+    this.backgroundColor = const Color(0xFFFFFFFF),
+  }) : super(key: key);
+
+  @override
+  _CustomDropdownFormFieldState createState() => _CustomDropdownFormFieldState();
+}
+
+class _CustomDropdownFormFieldState extends State<CustomDropdownFormField> {
+  late String? _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      value: _selectedValue,
+      items: widget.items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedValue = value;
+        });
+        widget.onChanged?.call(value);
+      },
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: widget.backgroundColor,
+        labelText: widget.isRequired
+            ? widget.labelText + ' *'
+            : widget.labelText,
+        labelStyle: widget.labelStyle?.copyWith(
+          //color: widget.isRequired ? Colors.black : null,
+        ),
+        contentPadding: widget.contentPadding,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        ),
+      ),
+      validator: widget.validator ?? (value) {
+        if (widget.isRequired && (value == null || value.isEmpty)) {
+          return 'Ce champ est obligatoire';
+        }
+        return null;
+      },
+      isExpanded: true,
+    );
+  }
+}
+
+class CustomDatePicker extends StatefulWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final FormFieldValidator<String>? validator;
+  final bool requiredIndicator;
+  final int initialYear; // Ajouter le paramètre pour l'année de départ
+
+  const CustomDatePicker({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    this.validator,
+    this.requiredIndicator = false,
+    this.initialYear = 1900, // Valeur par défaut si aucune valeur n'est fournie
+  }) : super(key: key);
+
+  @override
+  _CustomDatePickerState createState() => _CustomDatePickerState();
+}
+
+class _CustomDatePickerState extends State<CustomDatePicker> {
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: widget.controller,
+      readOnly: true,
+      validator: widget.validator,
+      decoration: InputDecoration(
+        labelText: null,
+        label: RichText(
+          text: TextSpan(
+            text: widget.labelText,
+            style: TextStyle(fontSize: 12.0, color: Colors.black),
+            children: widget.requiredIndicator
+                ? [
+              const TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.black),
+              ),
+            ]
+                : [],
+          ),
+        ),
+        prefixIcon: const Icon(
+          Icons.calendar_today,
+          size: 20.0,
+          color: Colors.grey,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+      ),
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(widget.initialYear), // Utiliser initialYear
+          lastDate: DateTime(2101),
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                primaryColor: Colors.green, // Couleur principale du calendrier
+                colorScheme: ColorScheme.light(
+                  primary: Colors.green, // Couleur de l'en-tête du calendrier
+                  onSurface: Colors.black, // Couleur du texte
+                ),
+                buttonTheme: ButtonThemeData(
+                  textTheme: ButtonTextTheme.primary,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (pickedDate != null) {
+          String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+          setState(() {
+            widget.controller.text = formattedDate;
+          });
+        }
+      },
+    );
+  }
+}
+
+
+class CustomPhoneNumberField extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final FormFieldValidator<String>? validator;
+  final bool requiredIndicator;
+
+  const CustomPhoneNumberField({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    this.validator,
+    this.requiredIndicator = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: null,
+        label: RichText(
+          text: TextSpan(
+            text: labelText,
+            style: TextStyle(fontSize: 12.0, color: Colors.black),
+            children: requiredIndicator
+                ? [
+              const TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.black),
+              ),
+            ]
+                : [],
+          ),
+        ),
+        prefixIcon: const Icon(
+          Icons.phone,
+          size: 20.0, // Taille de l'icône
+          color: Colors.grey,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        isDense: true, // Réduit la hauteur du champ
+        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0), // Ajustez le padding pour réduire la hauteur
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.green, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Color(0xFFcecece), width: 0.50),
+        ),
+      ),
+      onTap: () async {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              backgroundColor: Colors.blueGrey[50], // Changer la couleur de fond du modal
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: IntlPhoneField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    labelText: labelText,
+                    fillColor: Colors.white, // Couleur de fond de IntlPhoneField
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0), // Arrondir les angles
+                      borderSide: BorderSide(
+                        color: Colors.green, // Changer la couleur de la bordure
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0), // Arrondir les angles
+                        borderSide: const BorderSide(color: Colors.green, width: 2.0)
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0), // Arrondir les angles
+                      borderSide: BorderSide(
+                        color: Colors.green, // Changer la couleur de la bordure lors de la mise au point
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                  initialCountryCode: 'CI',
+                  onChanged: (phone) {
+                    // Actions à effectuer lors du changement du numéro de téléphone
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+
+class CustomDropdownButtonFormField extends StatelessWidget {
+  final String? value;
+  final List<String> items;
+  final String? labelText;
+  final void Function(String?)? onChanged;
+  final String? Function(String?)? validator;
+
+  const CustomDropdownButtonFormField({
+    Key? key,
+    required this.value,
+    required this.items,
+    this.labelText,
+    this.onChanged,
+    this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      items: items.map((item) => DropdownMenuItem<String>(
+        value: item,
+        child: Text(item),
+      )).toList(),
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: labelText,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+            color: Colors.green,
+            width: 2.0,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(color: Colors.green, width: 2.0)
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+            color: Color(0xFFcecece),
+            width: 0.50,
+          ),
+        ),
+      ),
+      dropdownColor: Colors.white,
+      validator: validator,
+    );
+  }
+}
+
+Widget GenreQuestion({
+  required List<String> options,
+  required int? selectedOption,
+  required ValueChanged<int?> onChanged,
+  bool showTextField = false,
+  TextEditingController? controller,
+  String? labelText,
+  required Color mycolor,
+}) {
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+
+            const SizedBox(width: 8.0),
+            Container(
+              padding: const EdgeInsets.only(right: 10.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: options.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String option = entry.value;
+                  return GestureDetector(
+                    onTap: () {
+                      onChanged(index);
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(0.0),
+                          child: Transform.scale(
+                            scale: 0.6, // Ajustez cette valeur pour changer la taille du bouton radio
+                            child: Radio<int>(
+                              value: index,
+                              groupValue: selectedOption,
+                              onChanged: onChanged,
+                              activeColor: mycolor, // Couleur du bouton radio sélectionné
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 0.0),
+                        Text(
+                          option,
+                          style: TextStyle(
+                            fontSize: 15.0, // Ajustez la taille du texte ici
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        if (showTextField) ...[
+          const SizedBox(height: 10),
+          CustomTextField(
+            labelText: labelText ?? '',
+            controller: controller ?? TextEditingController(),
+          ),
+        ],
+      ],
+    ),
+  );
 }
 

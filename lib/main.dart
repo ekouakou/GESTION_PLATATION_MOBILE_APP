@@ -8,8 +8,7 @@ import 'form_page.dart';
 import 'registration_list_page.dart';
 import 'welcome_page.dart';
 import 'commune_page.dart';
-
-
+import 'utils/theme.dart'; // Importez votre fichier de thème personnalisé
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,11 +30,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Firebase Auth',
-      theme: ThemeData.light(), // Thème clair par défaut
-      //darkTheme: ThemeData.dark(), // Thème sombre
+      theme: AppTheme.lightTheme, // Utilisez votre thème clair personnalisé
+      darkTheme: AppTheme.darkTheme, // Utilisez votre thème sombre personnalisé
       themeMode: ThemeMode.system, // Utiliser le mode système par défaut
-      home: IntroPage(),
-      //home: CommunePage(),
+      home: LoginPage(),
       routes: {
         '/welcome': (context) => WelcomePage(),
         '/login': (context) => LoginPage(),
