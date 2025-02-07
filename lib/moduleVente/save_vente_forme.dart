@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'choix_inscrption.dart';
+import '../choix_inscrption.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '/widgets/custom_text_field.dart';
@@ -327,169 +327,6 @@ class _FormPageState extends State<SaveVenteForm> {
                       //UTILISATEUR CONNECTE
 
                       if (user != null)
-                        CustomCard(
-                          title: 'Localité de recensement',
-                          iconWidget: Image.asset(
-                            'assets/images/carte-ci.png',
-                            height: 16.0,
-                            width: 16.0,
-                          ),
-                          backgroundColor: Colors.white,
-                          textColor: Colors.black,
-                        ),
-
-                      if (user != null)
-                      //UTILISATEUR NON CONNECTE
-                        Container(
-                          width: double.infinity, // This makes the card take the full width of the screen
-                          margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0), // Remove horizontal margin
-                          child: Card(
-                            elevation: 4,
-                            color: Colors.white,  // Changer la couleur de fond
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0),  // Personnaliser l'arrondi des angles
-                            ),
-                            shadowColor: Colors.black.withOpacity(0.2), // Diminish the shadow opacity here
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  Row(
-                                    children: [
-
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: CustomDropdownButtonFormField(
-                                                      value: STR_COMMUNEController,
-                                                      items: communeList,
-                                                      labelText: 'Commune *',
-                                                      /*onChanged: (value) {
-                                                        setState(() {
-                                                          STR_COMMUNEController = value;
-                                                        });
-                                                      },*/
-
-                                                      onChanged: (value) async {
-                                                        setState(() {
-                                                          STR_COMMUNEController = value;
-                                                        });
-                                                        if (value != null) {
-                                                          // Chargez les détails de la commune sélectionnée
-                                                          await _loadCommuneDetails(value);
-                                                        }
-                                                      },
-                                                      validator: (value) {
-                                                        if (value == null || value.isEmpty) {
-                                                          return 'Ce champ est obligatoire';
-                                                        }
-                                                        return null;
-                                                      },
-                                                    ),
-                                                  ),
-
-                                                ],
-                                              ),
-                                              const SizedBox(height: 10),
-
-                                              Visibility(
-                                                visible: STR_COMMUNEController != null,
-                                                child: Column(
-                                                  children: [
-
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: CustomTextField(
-                                                            labelText: 'District',
-                                                            controller: STR_DISTRICTController,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(width: 10),
-                                                        Expanded(
-                                                          child: CustomTextField(
-                                                            labelText: 'Région',
-                                                            controller: STR_REGIONController,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 10),
-
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: CustomTextField(
-                                                            labelText: 'Département',
-                                                            controller: STR_DEPARTEMENTController,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(width: 10),
-                                                        Expanded(
-                                                          child: CustomTextField(
-                                                            labelText: 'Sous-préfecture',
-                                                            controller: STR_SOUSPREFECTUREController,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 10),
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                      ),
-                                    ],
-                                  ),
-
-
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Campement',
-                                          controller: STR_CAMPEMENTController,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          labelText: 'Quartier',
-                                          controller: STR_CAMPEMENTController,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      CustomCard(
-                        title: 'Informations personnelles',
-                        iconWidget: Image.asset(
-                          'assets/images/user.png',
-                          height: 16.0,
-                          width: 16.0,
-                        ),
-                        backgroundColor: Colors.white,
-                        textColor: Colors.black,
-                      ),
-
 
                       Container(
                         width: double.infinity,
@@ -525,60 +362,20 @@ class _FormPageState extends State<SaveVenteForm> {
                                   ),
                                 ),
 
-                                Row(
-                                  children: [
-
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-
-                                          GenreQuestion(
-                                            mycolor : const Color(0xFF007D3C),
-                                            options: ['Masculin', 'Feminin'],
-                                            selectedOption: STR_GENREController,
-                                            onChanged: (int? value) {
-                                              setState(() {
-                                                STR_GENREController = value;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (_isSubmitted && STR_GENREController == null)
-                                  const Text(
-                                    'Veuillez sélectionner un genre.',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-
                                 const SizedBox(height: 10),
 
                                 Row(
                                   children: [
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Nom',
-                                        controller: STR_NOMController,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Veuillez renseigner votre nom';
-                                          }
-                                          return null;
-                                        },
-                                        requiredIndicator: true,
-                                      ),
-                                    ),
                                     const SizedBox(width: 10),
+                                    SizedBox(height: 16),
+
                                     Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Prénom(s)',
-                                        controller: STR_PRENOMController,
+                                      child: CustomDatePicker(
+                                        controller: STR_DATENAISSANCEController,
+                                        labelText: 'Date',
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Veuillez renseigner votre prénom';
+                                            return 'Veuillez renseigner la date';
                                           }
                                           return null;
                                         },
@@ -587,17 +384,17 @@ class _FormPageState extends State<SaveVenteForm> {
                                     ),
                                   ],
                                 ),
-
                                 const SizedBox(height: 10),
+
                                 Row(
                                   children: [
                                     Expanded(
                                       child: CustomTextField(
-                                        labelText: 'Lieu de naissance',
+                                        labelText: 'Poids',
                                         controller: STR_LIEU_NAISSANCEController,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Veuillez renseigner votre lieu de naissance';
+                                            return 'Veuillez renseigner la masse en Kg';
                                           }
                                           return null;
                                         },
@@ -607,55 +404,7 @@ class _FormPageState extends State<SaveVenteForm> {
                                     const SizedBox(width: 10),
                                     SizedBox(height: 16),
 
-                                    Expanded(
-                                      child: CustomDatePicker(
-                                        controller: STR_DATENAISSANCEController,
-                                        labelText: 'Date naissance',
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Veuillez renseigner votre date de naissance';
-                                          }
-                                          return null;
-                                        },
-                                        requiredIndicator: true,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
 
-                                    Expanded(
-                                      child: CustomPhoneNumberField(
-                                        controller: STR_PHONE_PRINCIPALController,
-                                        labelText: 'N° téléphone principale',
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Veuillez entrer votre numéro de téléphone';
-                                          }
-                                          return null;
-                                        },
-                                        requiredIndicator: true,
-                                      ),
-                                    ),
-
-
-                                    const SizedBox(width: 10),
-
-                                    Expanded(
-                                      child: CustomPhoneNumberField(
-                                        controller: STR_PHONE_SECONDAIREController,
-                                        labelText: 'N°Téléphone secondaire',
-
-                                      ),
-                                    ),
-                                    /*Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'N°Téléphone secondaire',
-                                        controller: STR_PHONE_SECONDAIREController,
-                                      ),
-                                    ),*/
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -663,72 +412,12 @@ class _FormPageState extends State<SaveVenteForm> {
                                   children: [
                                     Expanded(
                                       child: CustomTextField(
-                                        labelText: 'E-mail',
+                                        labelText: 'Prix de vente',
                                         controller: STR_MAILController,
                                       ),
                                     ),
                                     const SizedBox(width: 10),
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Secteur d\'activité',
-                                        controller: STR_SECTEUR_ACTIVITEController,
-                                      ),
-                                    ),
-                                  ],
-                                ),
 
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Fonction/occupation',
-                                        controller: STR_FONCTION_OCCUPATIONController,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Lieu de travail',
-                                        controller: STR_LIEU_TRAVAILController,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Lieu de résidence habituelle',
-                                        controller: STR_LIEU_RESIDENCEController,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Veuillez entrer votre lieu de résidence habituelle';
-                                          }
-                                          return null;
-                                        },
-                                        requiredIndicator: true,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: CustomTextField(
-                                        labelText: 'Personne à contacter en cas d’urgence',
-                                        controller: STR_PERSONNE_A_CONTACTERController,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CustomPhoneNumberField(
-                                        controller: STR_PHONE_PERSONNE_A_CONTACTERController,
-                                        labelText: 'Téléphone personne à contacter',
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ],
@@ -736,7 +425,6 @@ class _FormPageState extends State<SaveVenteForm> {
                           ),
                         ),
                       ),
-
 
                       const SizedBox(height: 20),
 

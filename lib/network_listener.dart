@@ -11,25 +11,36 @@ class NetworkListener extends StatefulWidget {
 }
 
 class _NetworkListenerState extends State<NetworkListener> {
+  bool? _previousConnectionStatus;
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<NetworkProvider>(
-      builder: (context, networkProvider, child) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                networkProvider.isConnected ? 'Connexion rétablie' : 'Connexion perdue',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              backgroundColor: networkProvider.isConnected ? Colors.green : Colors.red,
-              duration: Duration(seconds: 3),
-            ),
-          );
-        });
+    return Scaffold(
+      body: Consumer<NetworkProvider>(
+        builder: (context, networkProvider, child) {
+          // Vérifiez si le statut de connexion a changé
+          if (_previousConnectionStatus != null &&
+              networkProvider.isConnected != _previousConnectionStatus) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    networkProvider.isConnected ? 'Connexion rétablie' : 'Connexion perdue',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  backgroundColor: networkProvider.isConnected ? Colors.green : Colors.red,
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            });
+          }
 
-        return widget.child;
-      },
+          // Mettez à jour le statut de connexion précédent
+          _previousConnectionStatus = networkProvider.isConnected;
+
+          return widget.child;
+        },
+      ),
     );
   }
 }

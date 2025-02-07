@@ -1,49 +1,63 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'intro_page.dart';
 import 'choix_inscrption.dart';
 import 'login_page.dart';
 import 'dashboard_page.dart';
 import 'form_page.dart';
-import 'save_vente_forme.dart';
+import 'moduleVente/save_vente_forme.dart';
 import 'registration_list_page.dart';
 import 'welcome_page.dart';
 import 'commune_page.dart';
-import 'utils/theme.dart'; // Importez votre fichier de thème personnalisé
+import 'utils/theme.dart';
 import 'utils/theme_provider.dart';
+import 'network_provider.dart';
+import 'network_listener.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  /*await Firebase.initializeApp(
+  //await Firebase.initializeApp();  // Décommenter pour IOS
+  await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyA7Z0e_B8rzN1xfljvI5qtC6lBnL27iO_E",
       appId: "1:718726928056:android:7c9d74f4653dc0d797464d",
-      //appId: "1:718726928056:ios:bc000d775a28c66497464d",
       messagingSenderId: "Messaging sender id here",
       projectId: "recensement-de-population",
     ),
-  );*/
-  runApp(MyApp());
+  );
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => NetworkProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Firebase Auth',
-      theme: AppTheme.lightTheme, // Utilisez votre thème clair personnalisé
-      darkTheme: AppTheme.darkTheme, // Utilisez votre thème sombre personnalisé
-      themeMode: ThemeMode.system, // Utiliser le mode système par défaut
-      home: LoginPage(),
-      routes: {
-        '/welcome': (context) => WelcomePage(),
-        '/login': (context) => LoginPage(),
-        '/dashboard': (context) => DashboardPage(),
-        '/form': (context) => FormPage(),
-        '/saveVente': (context) => SaveVenteForm(),
-        '/liste': (context) => RegistrationList(),
-        '/choixinscription': (context) => ChoixInscriptionPage(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Flutter Firebase Auth',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: NetworkListener(child: LoginPage()),
+          routes: {
+            '/welcome': (context) => NetworkListener(child: WelcomePage()),
+            '/login': (context) => NetworkListener(child: LoginPage()),
+            '/dashboard': (context) => NetworkListener(child: DashboardPage()),
+            '/form': (context) => NetworkListener(child: FormPage()),
+            '/saveVente': (context) => NetworkListener(child: SaveVenteForm()),
+            '/liste': (context) => NetworkListener(child: RegistrationList()),
+            '/choixinscription': (context) => NetworkListener(child: ChoixInscriptionPage()),
+          },
+        );
       },
     );
   }
