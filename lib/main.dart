@@ -18,15 +18,15 @@ import 'utils/app_theme.dart'; // Import the new theme utility
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();  // Décommenter pour IOS
-  /*await Firebase.initializeApp(
+  //await Firebase.initializeApp();  // Décommenter pour IOS
+  await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyA7Z0e_B8rzN1xfljvI5qtC6lBnL27iO_E",
       appId: "1:718726928056:android:7c9d74f4653dc0d797464d",
       messagingSenderId: "Messaging sender id here",
       projectId: "recensement-de-population",
     ),
-  );*/
+  );
   runApp(
     MultiProvider(
       providers: [
