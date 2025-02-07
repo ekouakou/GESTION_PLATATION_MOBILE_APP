@@ -17,6 +17,9 @@ import '/widgets/genre_question.dart';
 import '/widgets/custom_card.dart';
 import '/widgets/document_question.dart';
 
+import '../utils/colors.dart';
+
+
 
 class SaveVenteForm extends StatefulWidget {
 
@@ -248,11 +251,10 @@ class _FormPageState extends State<SaveVenteForm> {
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('inscription',
@@ -287,7 +289,7 @@ class _FormPageState extends State<SaveVenteForm> {
 
       ),
 
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.getBackgroundColor(context),
       body : Stack(
         children: [
           Container(
@@ -333,11 +335,11 @@ class _FormPageState extends State<SaveVenteForm> {
                         margin: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                         child: Card(
                           elevation: 4,
-                          color: Colors.white,
+                          color: theme.colorScheme.background,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.0),
                           ),
-                          shadowColor: Colors.black.withOpacity(0.2),
+                          shadowColor: Colors.black.withOpacity(0),
 
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),

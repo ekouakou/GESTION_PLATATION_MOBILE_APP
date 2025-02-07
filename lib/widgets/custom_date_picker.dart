@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../utils/colors.dart'; // Assurez-vous d'importer les couleurs
+import '../utils/colors.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final TextEditingController controller;
@@ -25,23 +25,6 @@ class CustomDatePicker extends StatefulWidget {
 class _CustomDatePickerState extends State<CustomDatePicker> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final brightness = theme.brightness;
-
-    // Sélectionner les couleurs en fonction du mode de thème
-    final textColor = brightness == Brightness.light
-        ? AppColors.textColorLight
-        : AppColors.textColorDark;
-    final borderColor = brightness == Brightness.light
-        ? AppColors.secondaryColorLight.withOpacity(0.5)
-        : AppColors.secondaryColorDark.withOpacity(0.5);
-    final focusedBorderColor = brightness == Brightness.light
-        ? AppColors.accentColorLight
-        : AppColors.accentColorDark;
-    final errorColor = brightness == Brightness.light
-        ? AppColors.errorColorLight
-        : AppColors.errorColorDark;
-
     return TextFormField(
       controller: widget.controller,
       readOnly: true,
@@ -51,12 +34,18 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         label: RichText(
           text: TextSpan(
             text: widget.labelText,
-            style: TextStyle(fontSize: 12.0, color: textColor),
+            style: TextStyle(
+                fontSize: 12.0,
+                color: AppColors.getTextColor(context)
+            ),
             children: widget.requiredIndicator
                 ? [
               TextSpan(
                 text: ' *',
-                style: TextStyle(color: textColor, fontSize: 14.0),
+                style: TextStyle(
+                    color: AppColors.getTextColor(context),
+                    fontSize: 14.0
+                ),
               ),
             ]
                 : [],
@@ -65,25 +54,37 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         prefixIcon: Icon(
           Icons.calendar_today,
           size: 20.0,
-          color: theme.iconTheme.color ?? Colors.grey,
+          color: Theme.of(context).iconTheme.color ?? Colors.grey,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: borderColor, width: 0.50),
+          borderSide: BorderSide(
+              color: AppColors.getSecondaryColor(context).withOpacity(0.5),
+              width: 0.50
+          ),
         ),
         isDense: true,
         contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: focusedBorderColor, width: 2.0),
+          borderSide: BorderSide(
+              color: AppColors.getAccentColor(context),
+              width: 2.0
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: errorColor, width: 2.0),
+          borderSide: BorderSide(
+              color: AppColors.getErrorColor(context),
+              width: 2.0
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: borderColor, width: 0.50),
+          borderSide: BorderSide(
+              color: AppColors.getSecondaryColor(context).withOpacity(0.5),
+              width: 0.50
+          ),
         ),
       ),
       onTap: () async {
@@ -95,10 +96,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           builder: (BuildContext context, Widget? child) {
             return Theme(
               data: ThemeData.light().copyWith(
-                primaryColor: focusedBorderColor,
+                primaryColor: AppColors.getAccentColor(context),
                 colorScheme: ColorScheme.light(
-                  primary: focusedBorderColor,
-                  onSurface: textColor,
+                  primary: AppColors.getAccentColor(context),
+                  onSurface: AppColors.getTextColor(context),
                 ),
                 buttonTheme: ButtonThemeData(
                   textTheme: ButtonTextTheme.primary,
